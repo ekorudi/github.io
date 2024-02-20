@@ -1,0 +1,42 @@
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+
+<script>
+const callback = function () {
+      alert('A callback was triggered');
+};
+const config = {
+      startOnLoad: true,
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'cardinal' },
+      securityLevel: 'loose',
+};
+mermaid.initialize(config);
+</script>
+
+<pre class="mermaid">
+sequenceDiagram
+    participant a as NetmonkProbe
+    participant c as Context
+    participant t as Ticker
+    participant e as Exporter
+    participant w as Worker
+    a->>c: Create context with cancel
+    a->>t: Create ticker
+    loop Every tick
+        t->>a: Notify tick
+        a->>e: Increment scrape counter
+        a->>a: Start scraping goroutine
+        loop Assign tasks
+            a->>a: Assign task to channel
+        end
+        loop Prepare workers
+            a->>w: Start worker goroutine
+            loop Do tasks
+                w->>a: Do task
+            end
+            w->>a: Notify task done
+        end
+        a->>a: Wait for all tasks to complete
+    end
+
+</pre>
